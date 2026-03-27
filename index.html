@@ -873,6 +873,14 @@ let idleTimer = null;
 let lastActivity = Date.now();
 let submitted = false;
 
+// Per-tab time tracking
+let tabTimeMs = [0, 0, 0, 0, 0];
+let tabEnteredAt = null;
+
+// Interaction density tracking
+let interactionCounts = { clicks: 0, keystrokes: 0, scrolls: 0 };
+let interactionLog = []; // [{time, type}] sampled every 15s
+
 // Google Sheets webhook URL — replace with your Apps Script deployment URL
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwSlLKVBMPlkafDGbzUQo2t-L7awVMI3px5wlu5sNdVcL40LUjHc3X4VBJsZJlam9UP/exec';
 
@@ -978,23 +986,58 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ============================
-// IDLE TRACKING
+// IDLE TRACKING + INTERACTION DENSITY
 // ============================
 function startIdleTracking() {
   const IDLE_THRESHOLD = 30000; // 30 seconds of no activity = idle
 
   const resetIdle = () => { lastActivity = Date.now(); };
   document.addEventListener('mousemove', resetIdle);
-  document.addEventListener('keydown', resetIdle);
-  document.addEventListener('click', resetIdle);
-  document.addEventListener('scroll', resetIdle);
+  document.addEventListener('keydown', (e) => {
+    resetIdle();
+    if (!submitted) interactionCounts.keystrokes++;
+  });
+  document.addEventListener('click', (e) => {
+    resetIdle();
+    if (!submitted) interactionCounts.clicks++;
+  });
   document.addEventListener('touchstart', resetIdle);
 
+  // Scroll tracking — on the content area specifically
+  const contentArea = document.querySelector('.content-area');
+  if (contentArea) {
+    contentArea.addEventListener('scroll', () => {
+      resetIdle();
+      if (!submitted) interactionCounts.scrolls++;
+    });
+  }
+  // Also catch wheel events even if content doesn't scroll
+  document.addEventListener('wheel', resetIdle);
+
+  // Idle counter
   setInterval(() => {
     if (!submitted && Date.now() - lastActivity > IDLE_THRESHOLD) {
       idleSeconds++;
     }
   }, 1000);
+
+  // Interaction density snapshot every 15 seconds
+  setInterval(() => {
+    if (!submitted && sessionStart) {
+      interactionLog.push({
+        t: Math.round((Date.now() - new Date(sessionStart).getTime()) / 1000),
+        c: interactionCounts.clicks,
+        k: interactionCounts.keystrokes,
+        s: interactionCounts.scrolls,
+        tab: currentTab
+      });
+      // Reset counters for next window
+      interactionCounts = { clicks: 0, keystrokes: 0, scrolls: 0 };
+    }
+  }, 15000);
+
+  // Start tab timer for first tab
+  tabEnteredAt = Date.now();
 }
 
 // ============================
@@ -1008,7 +1051,14 @@ document.addEventListener('contextmenu', (e) => e.preventDefault());
 // TAB NAVIGATION
 // ============================
 function switchTab(idx) {
+  // Record time on previous tab
+  if (tabEnteredAt !== null && !submitted) {
+    tabTimeMs[currentTab] += (Date.now() - tabEnteredAt);
+  }
+
   currentTab = idx;
+  tabEnteredAt = Date.now();
+
   document.querySelectorAll('.tab-btn').forEach((btn, i) => {
     btn.classList.toggle('active', i === idx);
   });
@@ -1058,6 +1108,11 @@ async function submitAll() {
   if (submitted) return;
   submitted = true;
 
+  // Capture final tab time
+  if (tabEnteredAt !== null) {
+    tabTimeMs[currentTab] += (Date.now() - tabEnteredAt);
+  }
+
   const payload = {
     name: studentName,
     timestamp: new Date().toISOString(),
@@ -1075,7 +1130,15 @@ async function submitAll() {
       fullscreenExits: fullscreenExitCount,
       idleSeconds30s: idleSeconds,
       totalTimeSeconds: Math.round((Date.now() - new Date(sessionStart).getTime()) / 1000),
-    }
+    },
+    tabTime: {
+      tab1_sec: Math.round(tabTimeMs[0] / 1000),
+      tab2_sec: Math.round(tabTimeMs[1] / 1000),
+      tab3_sec: Math.round(tabTimeMs[2] / 1000),
+      tab4_sec: Math.round(tabTimeMs[3] / 1000),
+      tab5_sec: Math.round(tabTimeMs[4] / 1000),
+    },
+    interactionDensity: interactionLog,
   };
 
   // Show submitted screen immediately
