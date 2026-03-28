@@ -4,28 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Platforms Rant — 70-387</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,700;1,8..60,400&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0b0c10;
-  --surface: #141820;
-  --surface2: #1a1f2b;
-  --border: #2a3040;
-  --border-active: #ff6b35;
-  --text: #e4e2de;
-  --text-dim: #7a8090;
-  --text-faint: #4a5060;
-  --accent: #ff6b35;
-  --accent-soft: rgba(255,107,53,0.12);
-  --accent-glow: rgba(255,107,53,0.25);
-  --green: #34d399;
-  --green-soft: rgba(52,211,153,0.12);
-  --red: #f87171;
-  --red-soft: rgba(248,113,113,0.1);
-  --yellow: #fbbf24;
-  --radius: 10px;
+  --bg: #faf9f6;
+  --surface: #ffffff;
+  --surface2: #f3f1ec;
+  --border: #e2dfd8;
+  --border-active: #c8440d;
+  --text: #1a1a18;
+  --text-mid: #4a4a45;
+  --text-dim: #8a8880;
+  --text-faint: #b5b0a5;
+  --accent: #c8440d;
+  --accent-soft: rgba(200,68,13,0.08);
+  --accent-hover: rgba(200,68,13,0.12);
+  --green: #1a7a4f;
+  --green-soft: rgba(26,122,79,0.08);
+  --red: #b5302a;
+  --red-soft: rgba(181,48,42,0.06);
+  --yellow: #8a6d1b;
+  --yellow-soft: rgba(138,109,27,0.08);
+  --blue: #2563a0;
+  --blue-soft: rgba(37,99,160,0.06);
+  --radius: 8px;
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 html { font-size: 16px; }
@@ -33,7 +40,7 @@ html { font-size: 16px; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-body);
   min-height: 100vh;
   user-select: none;
   -webkit-user-select: none;
@@ -42,532 +49,303 @@ body {
   overflow: hidden;
 }
 
-/* ===== FULLSCREEN WARNING OVERLAY ===== */
+/* ===== FULLSCREEN OVERLAY ===== */
 #fullscreen-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.92);
+  position: fixed; inset: 0;
+  background: rgba(250,249,246,0.97);
   z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(8px);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(4px);
 }
-
 #fullscreen-overlay.hidden { display: none; }
-
 #fullscreen-overlay .warn-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: var(--red-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  margin-bottom: 24px;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--red-soft); border: 1px solid rgba(181,48,42,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px; color: var(--red);
 }
-
 #fullscreen-overlay h2 {
-  font-family: 'Fraunces', serif;
-  font-size: 28px;
-  margin-bottom: 12px;
-  color: var(--text);
+  font-family: var(--font-display); font-size: 24px; font-weight: 700;
+  margin-bottom: 8px; color: var(--text);
 }
-
 #fullscreen-overlay p {
-  color: var(--text-dim);
-  font-size: 15px;
-  margin-bottom: 28px;
-  text-align: center;
-  max-width: 380px;
-  line-height: 1.6;
+  color: var(--text-dim); font-size: 14px; margin-bottom: 24px;
+  text-align: center; max-width: 340px; line-height: 1.6;
 }
-
 .fs-btn {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  padding: 14px 36px;
-  border-radius: var(--radius);
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s, background 0.2s;
+  background: var(--accent); color: #fff; border: none;
+  padding: 12px 32px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
 }
+.fs-btn:hover { background: #a83a0b; }
 
-.fs-btn:hover { background: #e85a28; transform: scale(1.03); }
-
-/* ===== TAB-SWITCH WARNING BAR ===== */
+/* ===== TAB-SWITCH WARNING ===== */
 #tabswitch-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: var(--red);
-  color: #000;
-  text-align: center;
-  padding: 8px;
-  font-size: 13px;
-  font-weight: 600;
+  position: fixed; top: 0; left: 0; right: 0;
+  background: var(--red); color: #fff;
+  text-align: center; padding: 8px;
+  font-size: 13px; font-weight: 600;
   z-index: 8000;
   transform: translateY(-100%);
   transition: transform 0.3s ease;
-  letter-spacing: 0.3px;
 }
-
 #tabswitch-bar.show { transform: translateY(0); }
 
-/* ===== LOGIN SCREEN ===== */
+/* ===== LOGIN ===== */
 #login-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 7000;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: fixed; inset: 0; background: var(--bg);
+  z-index: 7000; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
 }
-
 #login-screen.hidden { display: none; }
-
-.login-card {
-  text-align: center;
-  max-width: 420px;
-  width: 90%;
-}
-
+.login-card { text-align: center; max-width: 400px; width: 90%; }
 .login-card .course-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--accent);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 16px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+  color: var(--accent); letter-spacing: 2px; margin-bottom: 16px;
 }
-
 .login-card h1 {
-  font-family: 'Fraunces', serif;
-  font-size: 38px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  line-height: 1.2;
+  font-family: var(--font-display); font-size: 36px; font-weight: 700;
+  margin-bottom: 6px; line-height: 1.15; color: var(--text);
 }
-
 .login-card .subtitle {
-  color: var(--text-dim);
-  font-size: 15px;
-  margin-bottom: 36px;
-  line-height: 1.5;
+  color: var(--text-dim); font-size: 15px; margin-bottom: 32px; line-height: 1.5;
 }
-
-.login-card .subtitle strong {
-  color: var(--accent);
-  font-weight: 600;
-}
-
+.login-card .subtitle strong { color: var(--accent); font-weight: 600; }
 .name-input {
-  width: 100%;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px;
-  padding: 14px 20px;
-  border-radius: var(--radius);
-  outline: none;
-  transition: border-color 0.2s;
-  text-align: center;
-  margin-bottom: 16px;
+  width: 100%; background: var(--surface); border: 1.5px solid var(--border);
+  color: var(--text); font-family: var(--font-body); font-size: 16px;
+  padding: 12px 20px; border-radius: var(--radius); outline: none;
+  transition: border-color 0.2s; text-align: center; margin-bottom: 12px;
 }
-
 .name-input:focus { border-color: var(--accent); }
 .name-input::placeholder { color: var(--text-faint); }
-
 .login-btn {
-  width: 100%;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  padding: 14px;
-  border-radius: var(--radius);
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-  margin-bottom: 20px;
+  width: 100%; background: var(--accent); color: #fff; border: none;
+  padding: 12px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s; margin-bottom: 16px;
 }
-
-.login-btn:hover { background: #e85a28; transform: scale(1.02); }
-.login-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
+.login-btn:hover { background: #a83a0b; }
+.login-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 .login-card .disclaimer {
-  font-size: 12px;
-  color: var(--text-faint);
-  line-height: 1.5;
+  font-size: 12px; color: var(--text-faint); line-height: 1.5;
 }
-
 .login-card .disclaimer span { color: var(--red); }
 
-/* ===== MAIN APP LAYOUT ===== */
+/* ===== APP ===== */
 #app { display: none; height: 100vh; flex-direction: column; }
 #app.visible { display: flex; }
 
-/* Top bar */
 .top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 32px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 32px; border-bottom: 1px solid var(--border);
+  background: var(--surface); flex-shrink: 0;
 }
-
 .top-bar .brand {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--text-dim);
-  letter-spacing: 1.5px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
+  letter-spacing: 1px;
 }
+.top-bar .brand strong { color: var(--accent); font-weight: 500; }
+.top-bar .student-name { font-size: 13px; color: var(--text-dim); }
+.top-bar .student-name strong { color: var(--text); font-weight: 500; }
 
-.top-bar .brand strong { color: var(--accent); font-weight: 700; }
-
-.top-bar .student-name {
-  font-size: 13px;
-  color: var(--text-dim);
-}
-
-.top-bar .student-name strong { color: var(--text); }
-
-/* Tab navigation */
+/* Tabs */
 .tab-nav {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  flex-shrink: 0;
-  overflow-x: auto;
+  display: flex; border-bottom: 1px solid var(--border);
+  background: var(--surface); flex-shrink: 0; overflow-x: auto;
 }
-
 .tab-btn {
-  flex: 1;
-  min-width: 0;
-  background: none;
-  border: none;
-  border-bottom: 2.5px solid transparent;
-  color: var(--text-dim);
-  font-family: 'Outfit', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 14px 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-  text-align: center;
-  position: relative;
+  flex: 1; min-width: 0; background: none; border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim); font-family: var(--font-body);
+  font-size: 13px; font-weight: 500;
+  padding: 12px 10px; cursor: pointer;
+  transition: all 0.15s; white-space: nowrap; text-align: center;
 }
-
 .tab-btn:hover { color: var(--text); background: var(--surface2); }
-
-.tab-btn.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  background: var(--surface2);
-}
-
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 .tab-btn .tab-check {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--green);
-  margin-left: 6px;
-  opacity: 0;
-  transition: opacity 0.3s;
+  display: inline-block; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--green);
+  margin-left: 5px; opacity: 0; transition: opacity 0.3s;
 }
-
 .tab-btn .tab-check.answered { opacity: 1; }
 
-/* Content area */
+/* Content */
 .content-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 40px 48px 100px;
+  flex: 1; overflow-y: auto; padding: 36px 48px 100px;
+  background: var(--bg);
 }
-
-/* Tab panel */
-.tab-panel { display: none; max-width: 780px; margin: 0 auto; }
-.tab-panel.active { display: block; animation: fadeUp 0.35s ease; }
-
+.tab-panel { display: none; max-width: 700px; margin: 0 auto; }
+.tab-panel.active { display: block; animation: fadeUp 0.3s ease; }
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .panel-number {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--accent);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-bottom: 12px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  color: var(--accent); letter-spacing: 2px; margin-bottom: 10px;
 }
-
 .panel-title {
-  font-family: 'Fraunces', serif;
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 24px;
+  font-family: var(--font-display); font-size: 30px; font-weight: 700;
+  line-height: 1.2; margin-bottom: 24px; color: var(--text);
+}
+.panel-title em { font-style: italic; color: var(--accent); }
+
+/* Prose */
+.context {
+  font-size: 14px; line-height: 1.7; color: var(--text-mid);
+  margin-bottom: 20px; font-style: italic;
 }
 
-.panel-title em {
-  font-style: italic;
-  color: var(--accent);
-}
-
-/* Prose blocks */
-.prose {
-  font-size: 16px;
-  line-height: 1.8;
-  color: var(--text);
-  margin-bottom: 24px;
-}
-
-.prose strong { color: #fff; font-weight: 600; }
-
-/* Quote */
+/* Quote blocks — the main content */
 .quote {
   background: var(--surface);
   border-left: 3px solid var(--accent);
+  border-radius: 0;
   padding: 24px 28px;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  margin: 24px 0;
+  margin: 0 0 24px;
 }
-
 .quote p {
-  font-size: 16px;
-  line-height: 1.75;
-  color: var(--text);
-  font-style: italic;
+  font-family: var(--font-display); font-size: 17px;
+  line-height: 1.8; color: var(--text);
 }
-
 .quote .attr {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 14px;
-  letter-spacing: 1px;
-  font-style: normal;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-faint); margin-top: 14px; letter-spacing: 0.5px;
 }
 
-/* Divider */
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 32px 0;
+/* Annotation between quotes */
+.note {
+  font-size: 14px; line-height: 1.7; color: var(--text-mid);
+  margin: 0 0 20px; padding: 0 4px;
 }
 
 /* MCQ */
 .mcq-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  margin-top: 32px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-top: 28px;
 }
-
 .mcq-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--yellow);
-  letter-spacing: 2px;
-  margin-bottom: 12px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  color: var(--yellow); letter-spacing: 1.5px; margin-bottom: 10px;
 }
-
 .mcq-question {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  line-height: 1.45;
+  font-size: 17px; font-weight: 600; margin-bottom: 18px;
+  line-height: 1.4; color: var(--text);
 }
-
-.mcq-options {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
+.mcq-options { display: flex; flex-direction: column; gap: 8px; }
 .mcq-opt {
-  background: var(--surface2);
-  border: 1.5px solid var(--border);
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  padding: 14px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
+  background: var(--bg); border: 1.5px solid var(--border);
+  color: var(--text); font-family: var(--font-body); font-size: 15px;
+  padding: 12px 16px; border-radius: 6px; cursor: pointer;
+  text-align: left; transition: all 0.15s;
+  display: flex; align-items: flex-start; gap: 10px;
 }
-
-.mcq-opt:hover {
-  border-color: var(--accent);
-  background: rgba(255,107,53,0.05);
-  transform: translateX(3px);
-}
-
-.mcq-opt.selected {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-}
-
+.mcq-opt:hover { border-color: var(--accent); background: var(--accent-soft); }
+.mcq-opt.selected { border-color: var(--accent); background: var(--accent-hover); }
 .mcq-opt .opt-letter {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-  flex-shrink: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid var(--border);
-  border-radius: 5px;
-  transition: all 0.2s;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+  color: var(--text-dim); flex-shrink: 0;
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--border); border-radius: 4px;
+  transition: all 0.15s;
 }
-
 .mcq-opt.selected .opt-letter {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+  background: var(--accent); color: #fff; border-color: var(--accent);
 }
 
 /* Submit bar */
 .submit-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 14px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 500;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 12px 32px; display: flex;
+  align-items: center; justify-content: space-between; z-index: 500;
 }
-
 .progress-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: var(--text-dim);
-  letter-spacing: 0.5px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
 }
-
 .submit-btn {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  padding: 12px 32px;
-  border-radius: var(--radius);
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: var(--accent); color: #fff; border: none;
+  padding: 10px 28px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
 }
+.submit-btn:hover { background: #a83a0b; }
+.submit-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-.submit-btn:hover { background: #e85a28; transform: scale(1.03); }
-.submit-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
-
-/* Submitted state */
+/* Submitted */
 #submitted-screen {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 6000;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  display: none; position: fixed; inset: 0;
+  background: var(--bg); z-index: 6000;
+  flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
 }
-
 #submitted-screen.visible { display: flex; }
-
 #submitted-screen .check-circle {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: var(--green-soft);
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--green-soft); border: 1px solid rgba(26,122,79,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 20px; color: var(--green);
+}
+#submitted-screen h2 {
+  font-family: var(--font-display); font-size: 28px;
+  font-weight: 700; margin-bottom: 8px;
+}
+#submitted-screen p { color: var(--text-dim); font-size: 14px; max-width: 340px; line-height: 1.6; }
+
+/* Illustration containers */
+.illo {
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--surface2);
+  border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px;
-  margin-bottom: 24px;
 }
+.illo svg { max-width: 100%; }
 
-#submitted-screen h2 {
-  font-family: 'Fraunces', serif;
-  font-size: 32px;
-  margin-bottom: 12px;
-}
-
-#submitted-screen p {
-  color: var(--text-dim);
-  font-size: 15px;
-  max-width: 380px;
-  line-height: 1.6;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .content-area { padding: 28px 20px 100px; }
-  .panel-title { font-size: 26px; }
-  .top-bar { padding: 10px 16px; }
-  .tab-btn { font-size: 11px; padding: 12px 8px; }
-  .submit-bar { padding: 12px 16px; }
+  .content-area { padding: 24px 16px 100px; }
+  .panel-title { font-size: 24px; }
+  .top-bar { padding: 8px 12px; }
+  .tab-btn { font-size: 11px; padding: 10px 6px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== FULLSCREEN OVERLAY ===== -->
+<!-- FULLSCREEN OVERLAY -->
 <div id="fullscreen-overlay">
-  <div class="warn-icon">⛶</div>
+  <div class="warn-icon">&#9632;</div>
   <h2>Fullscreen Required</h2>
-  <p>This activity runs in fullscreen mode. Your interactions are being recorded. Click below to continue.</p>
+  <p>This activity runs in fullscreen mode. Your interactions are being recorded.</p>
   <button class="fs-btn" onclick="enterFullscreen()">Enter Fullscreen</button>
 </div>
 
-<!-- ===== TAB-SWITCH WARNING ===== -->
+<!-- TAB-SWITCH WARNING -->
 <div id="tabswitch-bar"></div>
 
-<!-- ===== LOGIN SCREEN ===== -->
+<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-card">
-    <div class="course-tag">70-387 &middot; Strategy for High-Tech</div>
+    <div class="course-tag">70-387</div>
     <h1>The Platforms Rant</h1>
-    <p class="subtitle">A warm-up activity by <strong>Prof. Hussein Fadlallah</strong><br>Read. Think. Answer. Your responses are recorded.</p>
+    <p class="subtitle">Read the excerpts. Answer the questions.</p>
     <input type="text" class="name-input" id="nameInput" placeholder="Enter your full name" autocomplete="off" spellcheck="false">
     <button class="login-btn" id="loginBtn" onclick="startActivity()" disabled>Begin</button>
     <p class="disclaimer">
-      <span>&#9679;</span> This session tracks: answer changes, tab switches, idle time, and fullscreen exits.<br>
-      Your data is linked to your name above.
+      <span>&#9679;</span> This session monitors tab switches, idle time, fullscreen exits, and time per section.
     </p>
   </div>
 </div>
 
-<!-- ===== MAIN APP ===== -->
+<!-- MAIN APP -->
 <div id="app">
   <div class="top-bar">
     <div class="brand"><strong>70-387</strong> &nbsp;The Platforms Rant</div>
@@ -576,98 +354,90 @@ body {
 
   <nav class="tab-nav">
     <button class="tab-btn active" onclick="switchTab(0)">1. Amazon vs Google<span class="tab-check" id="check-0"></span></button>
-    <button class="tab-btn" onclick="switchTab(1)">2. But...<span class="tab-check" id="check-1"></span></button>
-    <button class="tab-btn" onclick="switchTab(2)">3. Dogfooding<span class="tab-check" id="check-2"></span></button>
-    <button class="tab-btn" onclick="switchTab(3)">4. Google+ Failure<span class="tab-check" id="check-3"></span></button>
-    <button class="tab-btn" onclick="switchTab(4)">5. The Takeaway<span class="tab-check" id="check-4"></span></button>
+    <button class="tab-btn" onclick="switchTab(1)">2. The Mandate<span class="tab-check" id="check-1"></span></button>
+    <button class="tab-btn" onclick="switchTab(2)">3. Eat Your Dogfood<span class="tab-check" id="check-2"></span></button>
+    <button class="tab-btn" onclick="switchTab(3)">4. Google+ Autopsy<span class="tab-check" id="check-3"></span></button>
+    <button class="tab-btn" onclick="switchTab(4)">5. The Thesis<span class="tab-check" id="check-4"></span></button>
   </nav>
 
   <div class="content-area">
 
-    <!-- ===== TAB 1: AMAZON VS GOOGLE ===== -->
+    <!-- TAB 1 -->
     <div class="tab-panel active" data-tab="0">
-      <div class="panel-number">PART 01</div>
+      <div class="panel-number">PART 01 OF 05</div>
       <div class="panel-title">Amazon Does <em>Everything</em> Wrong</div>
 
-      <p class="prose">
-        In 2011, a senior Google engineer named <strong>Steve Yegge</strong> wrote an internal rant that accidentally went public. He'd spent six and a half years at Amazon before joining Google, and he opened with a striking claim: <strong>Amazon does everything wrong, and Google does everything right.</strong>
-      </p>
+      <p class="context">In 2011, Google engineer Steve Yegge wrote an internal rant that accidentally went public. He'd spent six years at Amazon before joining Google. He opened with this:</p>
 
       <div class="quote">
-        <p>"There are probably a hundred or even two hundred different ways you can compare the two companies, and Google is superior in all but three of them."</p>
-        <div class="attr">— STEVE YEGGE, GOOGLE ENGINEER (2011)</div>
+        <p>"I was at Amazon for about six and a half years, and now I've been at Google for that long. One thing that struck me immediately about the two companies &mdash; an impression that has been reinforced almost daily &mdash; is that Amazon does everything wrong, and Google does everything right. Sure, it's a sweeping generalization, but a surprisingly accurate one."</p>
+        <div class="attr">STEVE YEGGE, 2011</div>
       </div>
 
-      <p class="prose">
-        His list of Amazon's failures was long. Their hiring process was inconsistent because each team hired for itself. Their engineers spent so much time on operations they barely had time to code. Their offices were bare-bones. Their pay was mediocre. Their code was a mess with no engineering standards. He described the codebase as "a bunch of crappy tools that read and write state machine information into relational databases."
-      </p>
+      <div class="quote">
+        <p>"Their code base is a disaster, with no engineering standards whatsoever except what individual teams choose to put in place. &hellip; They don't give a single shit about charity or helping the needy or community contributions or anything like that. Never comes up there, except maybe to laugh about it. Their facilities are dirt-smeared cube farms without a dime spent on decor or common meeting areas."</p>
+        <div class="attr">YEGGE ON AMAZON</div>
+      </div>
 
-      <p class="prose">
-        Google, by contrast, had better hiring, better tools, better perks, better code, better everything. By almost every measure Yegge could think of, Google was the superior company.
-      </p>
+      <p class="note">So Google is better at hiring, code, perks, pay, culture, offices &mdash; basically everything. And yet Yegge wrote a 5,000-word rant arguing Google was losing. Why?</p>
 
-      <p class="prose">
-        So why would anyone write a rant about this? Because Yegge believed Amazon had <strong>one thing</strong> that made up for all of it. One thing Google was completely missing. And that one thing, he argued, mattered more than everything else combined.
-      </p>
+      <div class="quote">
+        <p>"But there's one thing they do really really well that pretty much makes up for ALL of their political, philosophical and technical screw-ups."</p>
+        <div class="attr">YEGGE, SETTING UP THE PUNCHLINE</div>
+      </div>
 
       <div class="mcq-block">
-        <div class="mcq-label">&#9997; QUESTION 1 OF 5</div>
-        <div class="mcq-question">Based on what you know from this course, what is the "one thing" a company with worse technology, worse hiring, and worse code could still get right that would outweigh all those disadvantages?</div>
+        <div class="mcq-label">QUESTION 1 OF 5</div>
+        <div class="mcq-question">What is the "one thing" Amazon does that makes up for everything else?</div>
         <div class="mcq-options" data-q="0">
           <button class="mcq-opt" onclick="selectAnswer(0, 'a')">
             <span class="opt-letter">A</span>
-            <span>Superior customer service and brand loyalty</span>
+            <span>Two-day shipping. Obviously.</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(0, 'b')">
             <span class="opt-letter">B</span>
-            <span>A platform strategy that lets others build on your infrastructure</span>
+            <span>They built a platform, not just a product</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(0, 'c')">
             <span class="opt-letter">C</span>
-            <span>Moving fast and shipping products before competitors</span>
+            <span>They hired Jeff Bezos, who is basically Steve Jobs but less fashionable</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(0, 'd')">
             <span class="opt-letter">D</span>
-            <span>Hiring a Steve Jobs-type visionary leader</span>
+            <span>They launch early and iterate, even if things break</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ===== TAB 2: BUT... ===== -->
+    <!-- TAB 2 -->
     <div class="tab-panel" data-tab="1">
-      <div class="panel-number">PART 02</div>
-      <div class="panel-title">But Then <em>Bezos</em> Did Something</div>
+      <div class="panel-number">PART 02 OF 05</div>
+      <div class="panel-title">The <em>Bezos</em> Mandate</div>
 
-      <p class="prose">
-        Around 2002, Amazon's CEO Jeff Bezos issued what Yegge called the most important mandate in the company's history. Bezos was known for micro-managing every pixel on Amazon's website and handing out sticky notes reminding people "who runs the company." But this particular mandate was different. It wasn't about pixels or products. It was about how teams work together.
-      </p>
-
-      <p class="prose">
-        Bezos told every team in the company to follow six rules. In plain language, the rules said:
-      </p>
+      <p class="context">Around 2002, Bezos issued six rules to every team at Amazon. Yegge reproduced them from memory:</p>
 
       <div class="quote">
-        <p><strong>1.</strong> Every team must make its work available to other teams through a clear, structured interface — like a menu that others can order from.<br><br>
-        <strong>2.</strong> If you need something from another team, you go through that menu. No shortcuts.<br><br>
-        <strong>3.</strong> No backdoors, no informal workarounds, no "just ask Dave to pull the data." The menu is the only way.<br><br>
-        <strong>4.</strong> Teams can build their menu however they want. Bezos didn't care about the technical details.<br><br>
-        <strong>5.</strong> Every menu must be designed as if <em>outside developers</em> — people who don't work at Amazon — could use it someday.<br><br>
-        <strong>6.</strong> Anyone who doesn't follow these rules will be fired.</p>
-        <div class="attr">— BEZOS MANDATE, PARAPHRASED (CIRCA 2002)</div>
+        <p>"1) All teams will henceforth expose their data and functionality through service interfaces.<br><br>
+        2) Teams must communicate with each other through these interfaces.<br><br>
+        3) There will be no other form of interprocess communication allowed: no direct linking, no direct reads of another team's data store, no shared-memory model, no back-doors whatsoever. The only communication allowed is via service interface calls over the network.<br><br>
+        4) It doesn't matter what technology they use.<br><br>
+        5) All service interfaces, without exception, must be designed from the ground up to be externalizable. That is to say, the team must plan and design to be able to expose the interface to developers in the outside world. No exceptions.<br><br>
+        6) Anyone who doesn't do this will be fired.<br><br>
+        Thank you; have a nice day!"</p>
+        <div class="attr">BEZOS MANDATE, CIRCA 2002</div>
       </div>
 
-      <p class="prose">
-        Rule #5 was the crucial one. Bezos wasn't just reorganizing his company. He was forcing every team to build as if <strong>the outside world might eventually plug into their work</strong>. At the time, Amazon was an online store. Nobody would have guessed it needed to be an "extensible, programmable platform."
-      </p>
+      <p class="note">Yegge adds: "#6 was quite real, so people went to work." He describes the enforcer as "Rick Dalzell &mdash; an ex-Army Ranger, West Point graduate, ex-boxer &mdash; a big genial scary man who used the word 'hardened interface' a lot."</p>
 
-      <p class="prose">
-        But Bezos had realized two things. First, all the infrastructure Amazon built for selling books could be repurposed as a <strong>computing platform anyone could rent</strong>. That became Amazon Web Services (AWS). Second, he realized he couldn't always build the right product for every customer. He needed to let <strong>third parties</strong> build on top of Amazon's capabilities.
-      </p>
+      <div class="quote">
+        <p>"Bezos realized long before the vast majority of Amazonians that Amazon needs to be a platform. You wouldn't really think that an online bookstore needs to be an extensible, programmable platform. Would you?"</p>
+        <div class="attr">YEGGE ON WHY BEZOS DID IT</div>
+      </div>
 
       <div class="mcq-block">
-        <div class="mcq-label">&#9997; QUESTION 2 OF 5</div>
-        <div class="mcq-question">Bezos didn't care what technology each team used (Rule 4), but was obsessive about Rule 5 — that every interface must be designed for outside developers. Why would a CEO care more about external access than internal technology choices?</div>
+        <div class="mcq-label">QUESTION 2 OF 5</div>
+        <div class="mcq-question">Rule 4 says Bezos doesn't care what technology teams use. Rule 5 says every interface must be designed for outside developers. Why would a CEO care more about external access than internal technology?</div>
         <div class="mcq-options" data-q="1">
           <button class="mcq-opt" onclick="selectAnswer(1, 'a')">
             <span class="opt-letter">A</span>
@@ -675,166 +445,157 @@ body {
           </button>
           <button class="mcq-opt" onclick="selectAnswer(1, 'b')">
             <span class="opt-letter">B</span>
-            <span>It's cheaper to let outsiders build features than to hire more engineers</span>
+            <span>Bezos was preparing to sell Amazon and wanted clean documentation</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(1, 'c')">
             <span class="opt-letter">C</span>
-            <span>Bezos was preparing for an IPO and needed to show openness to investors</span>
+            <span>He read it in a management book and thought it sounded cool</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(1, 'd')">
             <span class="opt-letter">D</span>
-            <span>He was worried Amazon engineers would leave and take proprietary knowledge</span>
+            <span>It's cheaper to let outsiders build features than to hire more engineers</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ===== TAB 3: DOGFOODING ===== -->
+    <!-- TAB 3 -->
     <div class="tab-panel" data-tab="2">
-      <div class="panel-number">PART 03</div>
-      <div class="panel-title">The Golden Rule: <em>Eat Your Own Dogfood</em></div>
+      <div class="panel-number">PART 03 OF 05</div>
+      <div class="panel-title">Eat Your Own <em>Dogfood</em></div>
 
-      <p class="prose">
-        Yegge then introduced what he called the <strong>Golden Rule of Platforms</strong>: "Eat Your Own Dogfood." This means: if you're building a platform for others, you should be forced to use that same platform yourself. Don't give yourself special shortcuts or secret backdoors that external developers don't get. If the platform is painful for outsiders, it should be painful for you too — because that's how you'll be motivated to fix it.
-      </p>
-
-      <p class="prose">
-        He rephrased it even more directly: <strong>"Start with a platform, and then use it for everything."</strong> You can't build a great product first and bolt on a platform later. That order matters.
-      </p>
+      <p class="context">Yegge introduces what he calls the Golden Rule of Platforms:</p>
 
       <div class="quote">
-        <p>"Microsoft has known about the Dogfood rule for at least twenty years. It's been part of their culture for a whole generation now. You don't eat People Food and give your developers Dog Food."</p>
-        <div class="attr">— YEGGE ON MICROSOFT</div>
+        <p>"The Golden Rule of platforms is that you Eat Your Own Dogfood. The Google+ platform is a pathetic afterthought. We had no API at all at launch, and last I checked, we had one measly API call. One of the team members marched in and told me about it when they launched, and I asked: 'So is it the Stalker API?' She got all glum and said 'Yeah.' I mean, I was joking, but no&hellip; the only API call we offer is to get someone's stream."</p>
+        <div class="attr">YEGGE ON GOOGLE+</div>
       </div>
 
-      <p class="prose">
-        Yegge acknowledged that <strong>Microsoft</strong> wasn't great at design, but they had over thirty years of experience building platforms. Their developer portal (MSDN) had thousands upon thousands of tools and resources. <strong>Apple</strong> understood the power of third-party development through the App Store. <strong>Facebook</strong> understood it by letting outside developers build Farmville, Mafia Wars, and hundreds of other apps — making Facebook a different experience for every user.
-      </p>
+      <div class="quote">
+        <p>"Microsoft has known about the Dogfood rule for at least twenty years. It's been part of their culture for a whole generation now. You don't eat People Food and give your developers Dog Food. Doing that is simply robbing your long-term platform value for short-term successes. Platforms are all about long-term thinking."</p>
+        <div class="attr">YEGGE ON MICROSOFT</div>
+      </div>
 
-      <p class="prose">
-        And Google? Yegge described Google's developer portal as looking like "what your fifth-grade nephew might mock up if he were doing an assignment to demonstrate what a big powerful platform company might be building if all they had, resource-wise, was one fifth grader."
-      </p>
+      <p class="note">He then compares developer portals. Microsoft's MSDN had "thousands and thousands and THOUSANDS of API calls." Google's developer portal? He compared it to what a fifth-grader might build for a school project.</p>
+
+      <div class="quote">
+        <p>"After you've marveled at the platform offerings of Microsoft and Amazon&hellip; head over to developers.google.com and browse a little. Pretty big difference, eh? It's like what your fifth-grade nephew might mock up if he were doing an assignment to demonstrate what a big powerful platform company might be building if all they had, resource-wise, was one fifth grader."</p>
+        <div class="attr">YEGGE, NOT HOLDING BACK</div>
+      </div>
 
       <div class="mcq-block">
-        <div class="mcq-label">&#9997; QUESTION 3 OF 5</div>
-        <div class="mcq-question">According to the "Eat Your Own Dogfood" principle, which of the following is the biggest strategic mistake a company can make?</div>
+        <div class="mcq-label">QUESTION 3 OF 5</div>
+        <div class="mcq-question">"Eat Your Own Dogfood" means:</div>
         <div class="mcq-options" data-q="2">
           <button class="mcq-opt" onclick="selectAnswer(2, 'a')">
             <span class="opt-letter">A</span>
-            <span>Building internal tools that are better than what external developers get access to</span>
+            <span>Your engineers should literally eat at the company cafeteria to save money</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(2, 'b')">
             <span class="opt-letter">B</span>
-            <span>Spending too much money on developer documentation</span>
+            <span>Build a product first, then figure out the platform stuff later when you have time</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(2, 'c')">
             <span class="opt-letter">C</span>
-            <span>Allowing competitors to copy your platform features</span>
+            <span>Use your own platform internally &mdash; if it's painful for outside developers, it should be painful for you too</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(2, 'd')">
             <span class="opt-letter">D</span>
-            <span>Launching a platform before you have a product</span>
+            <span>Copy whatever Microsoft does, because they have 30 years of experience</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ===== TAB 4: GOOGLE+ FAILURE ===== -->
+    <!-- TAB 4 -->
     <div class="tab-panel" data-tab="3">
-      <div class="panel-number">PART 04</div>
-      <div class="panel-title">Why <em>Google+</em> Was Doomed</div>
+      <div class="panel-number">PART 04 OF 05</div>
+      <div class="panel-title">The <em>Google+</em> Autopsy</div>
 
-      <p class="prose">
-        Google+ launched in 2011 as Google's answer to Facebook. It had some clever features — Circles for grouping friends, Hangouts for video chat. As a <strong>product</strong>, it was arguably well-designed. But Yegge argued that this was exactly the problem: Google thought Facebook won because it built a great product. That diagnosis was wrong.
-      </p>
+      <p class="context">Yegge's sharpest critique: Google thought Facebook won because of its product. He thought that diagnosis was completely wrong.</p>
 
       <div class="quote">
-        <p>"Facebook is successful because they built an entire constellation of products by allowing other people to do the work. So Facebook is different for everyone."</p>
-        <div class="attr">— YEGGE ON WHY FACEBOOK WON</div>
+        <p>"Google+ is a knee-jerk reaction, a study in short-term thinking, predicated on the incorrect notion that Facebook is successful because they built a great product. But that's not why they are successful. Facebook is successful because they built an entire constellation of products by allowing other people to do the work. So Facebook is different for everyone. Some people spend all their time on Mafia Wars. Some spend all their time on Farmville. There are hundreds or maybe thousands of different high-quality time sinks available, so there's something there for everyone."</p>
+        <div class="attr">YEGGE ON WHY FACEBOOK WON</div>
       </div>
-
-      <p class="prose">
-        Google's response to seeing Facebook's ecosystem of third-party games and apps was to go contract someone to write games for Google+. Do you see the difference? Facebook created a platform and let <strong>thousands of developers</strong> figure out what users want. Google tried to predict what users want and deliver it themselves.
-      </p>
 
       <div class="quote">
-        <p>"There have been precious few people in the world, over the entire history of computing, who have been able to reliably predict what people want. Steve Jobs was one of them. We don't have a Steve Jobs here. I'm sorry, but we don't."</p>
-        <div class="attr">— YEGGE, BEING BLUNT</div>
+        <p>"Our Google+ team took a look at the aftermarket and said: 'Gosh, it looks like we need some games. Let's go contract someone to, um, write some games for us.' Do you begin to see how incredibly wrong that thinking is now? The problem is that we are trying to predict what people want and deliver it for them."</p>
+        <div class="attr">YEGGE ON GOOGLE'S RESPONSE</div>
       </div>
 
-      <p class="prose">
-        The lesson: unless you're a once-in-a-generation product visionary, you can't out-product a platform. Google+ had features. Facebook had an <strong>ecosystem</strong>. Features can be copied. Ecosystems create network effects that are self-reinforcing.
-      </p>
+      <div class="quote">
+        <p>"There have been precious few people in the world, over the entire history of computing, who have been able to do it reliably. Steve Jobs was one of them. We don't have a Steve Jobs here. I'm sorry, but we don't."</p>
+        <div class="attr">YEGGE, APOLOGIZING TO LARRY PAGE</div>
+      </div>
 
       <div class="mcq-block">
-        <div class="mcq-label">&#9997; QUESTION 4 OF 5</div>
-        <div class="mcq-question">Google+ had a nice product with features like Circles and Hangouts, yet it failed against Facebook. Which course concept best explains this outcome?</div>
+        <div class="mcq-label">QUESTION 4 OF 5</div>
+        <div class="mcq-question">Google's mistake with Google+ was:</div>
         <div class="mcq-options" data-q="3">
           <button class="mcq-opt" onclick="selectAnswer(3, 'a')">
             <span class="opt-letter">A</span>
-            <span>Google+ lost because it launched later and couldn't overcome Facebook's first-mover advantage</span>
+            <span>They should have bought Farmville</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(3, 'b')">
             <span class="opt-letter">B</span>
-            <span>Facebook's third-party ecosystem created cross-side network effects (developers ↔ users) that a standalone product cannot replicate</span>
+            <span>They built a product when they needed a platform &mdash; trying to predict user needs instead of enabling third parties to serve them</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(3, 'c')">
             <span class="opt-letter">C</span>
-            <span>Google+ had a pricing problem — it should have paid users to switch from Facebook</span>
+            <span>They launched too late &mdash; Facebook had already won with first-mover advantage</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(3, 'd')">
             <span class="opt-letter">D</span>
-            <span>Facebook won because Mark Zuckerberg is a Steve Jobs-level product visionary</span>
+            <span>They didn't hire Steve Jobs (who was, admittedly, unavailable)</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ===== TAB 5: THE TAKEAWAY ===== -->
+    <!-- TAB 5 -->
     <div class="tab-panel" data-tab="4">
-      <div class="panel-number">PART 05</div>
-      <div class="panel-title">The <em>Closing</em> Argument</div>
+      <div class="panel-number">PART 05 OF 05</div>
+      <div class="panel-title">The <em>Thesis</em></div>
 
-      <p class="prose">
-        Yegge's entire rant built toward a single, forceful thesis:
-      </p>
+      <p class="context">Yegge's closing argument, building to a single claim:</p>
 
       <div class="quote">
         <p>"A product is useless without a platform, or more precisely and accurately, a platform-less product will always be replaced by an equivalent platform-ized product."</p>
-        <div class="attr">— YEGGE'S CENTRAL THESIS</div>
+        <div class="attr">YEGGE'S CENTRAL THESIS</div>
       </div>
 
-      <p class="prose">
-        He argued that Google was a "Product Company through and through" — built on the wild success of Search, which biased everyone toward thinking they could keep predicting what users want and delivering it perfectly. But Bezos, despite being a control freak, realized something Yegge felt Google's leadership hadn't: <strong>you don't need to be Steve Jobs if you build a platform that lets others solve the problem for you.</strong>
-      </p>
+      <div class="quote">
+        <p>"It's a big stretch even to get most teams to offer a stubby service to get programmatic access to their data and computations. Most of them think they're building products."</p>
+        <div class="attr">YEGGE ON GOOGLE'S CULTURE</div>
+      </div>
 
-      <p class="prose">
-        His closing was urgent. Google needed a cultural transformation. Not just a few teams thinking about APIs, but an "all-hands-on-deck emergency." He acknowledged it might not be too late, "but the longer we wait, the closer we get to being Too Late."
-      </p>
+      <div class="quote">
+        <p>"We can't keep launching products and pretending we'll turn them into magical beautiful extensible platforms later. We've tried that and it's not working. &hellip; If you delay it, it'll be ten times as much work as just doing it correctly up front. You can't cheat."</p>
+        <div class="attr">YEGGE'S WARNING</div>
+      </div>
 
-      <p class="prose">
-        The rant was meant to be internal. Yegge accidentally posted it publicly, it went viral, and it became one of the most widely read essays on platform strategy ever written — by an engineer, not a business school professor.
-      </p>
+      <p class="note">The rant was meant to stay internal. Yegge posted it publicly by accident, it went viral, and it became one of the most widely cited essays on platform strategy ever written &mdash; by an engineer, not a professor.</p>
 
       <div class="mcq-block">
-        <div class="mcq-label">&#9997; QUESTION 5 OF 5</div>
-        <div class="mcq-question">Yegge says "a platform-less product will always be replaced by an equivalent platform-ized product." Is he right? When might a product company successfully resist platformization?</div>
+        <div class="mcq-label">QUESTION 5 OF 5</div>
+        <div class="mcq-question">Yegge says every product will be replaced by a platform. Is he right?</div>
         <div class="mcq-options" data-q="4">
           <button class="mcq-opt" onclick="selectAnswer(4, 'a')">
             <span class="opt-letter">A</span>
-            <span>He's always right — every product must eventually become a platform or die</span>
+            <span>Yes, always. Every product must become a platform or die. No exceptions.</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(4, 'b')">
             <span class="opt-letter">B</span>
-            <span>Products can survive if they control a scarce resource (e.g., hardware, patents, regulation) that platforms can't route around</span>
+            <span>Mostly, but products can survive if they control something scarce that platforms can't route around (hardware, regulation, patents)</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(4, 'c')">
             <span class="opt-letter">C</span>
-            <span>Products only survive if they have a Steve Jobs-type leader who can predict customer needs perfectly</span>
+            <span>No. Most successful companies are product companies. Platforms are overhyped.</span>
           </button>
           <button class="mcq-opt" onclick="selectAnswer(4, 'd')">
             <span class="opt-letter">D</span>
-            <span>He's wrong — most successful companies are product companies, not platform companies</span>
+            <span>Only if you don't have a Steve Jobs. Which, as Yegge pointed out, you don't.</span>
           </button>
         </div>
       </div>
@@ -842,61 +603,43 @@ body {
 
   </div>
 
-  <!-- Submit bar -->
   <div class="submit-bar">
     <div class="progress-text" id="progressText">0 of 5 answered</div>
     <button class="submit-btn" id="submitBtn" onclick="submitAll()" disabled>Submit Answers</button>
   </div>
 </div>
 
-<!-- ===== SUBMITTED SCREEN ===== -->
+<!-- SUBMITTED -->
 <div id="submitted-screen">
   <div class="check-circle">&#10003;</div>
   <h2>Submitted</h2>
-  <p>Your answers and session data have been recorded. You can close this window.</p>
+  <p>Your answers and session data have been recorded. Welcome back from Eid break.</p>
 </div>
 
-
 <script>
-// ============================
 // STATE
-// ============================
 let studentName = '';
 let answers = [null, null, null, null, null];
-let answerTimestamps = [[], [], [], [], []]; // tracks every change
+let answerTimestamps = [[], [], [], [], []];
 let currentTab = 0;
 let sessionStart = null;
 let tabSwitchCount = 0;
 let fullscreenExitCount = 0;
 let idleSeconds = 0;
-let idleTimer = null;
 let lastActivity = Date.now();
 let submitted = false;
-
-// Per-tab time tracking
 let tabTimeMs = [0, 0, 0, 0, 0];
 let tabEnteredAt = null;
-
-// Interaction density tracking
 let interactionCounts = { clicks: 0, keystrokes: 0, scrolls: 0 };
-let interactionLog = []; // [{time, type}] sampled every 15s
+let interactionLog = [];
 
-// Google Sheets webhook URL — replace with your Apps Script deployment URL
 const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwSlLKVBMPlkafDGbzUQo2t-L7awVMI3px5wlu5sNdVcL40LUjHc3X4VBJsZJlam9UP/exec';
 
-// ============================
 // LOGIN
-// ============================
 const nameInput = document.getElementById('nameInput');
 const loginBtn = document.getElementById('loginBtn');
-
-nameInput.addEventListener('input', () => {
-  loginBtn.disabled = nameInput.value.trim().length < 2;
-});
-
-nameInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && nameInput.value.trim().length >= 2) startActivity();
-});
+nameInput.addEventListener('input', () => { loginBtn.disabled = nameInput.value.trim().length < 2; });
+nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && nameInput.value.trim().length >= 2) startActivity(); });
 
 function startActivity() {
   studentName = nameInput.value.trim();
@@ -908,30 +651,19 @@ function startActivity() {
   checkFullscreen();
 }
 
-// ============================
 // FULLSCREEN
-// ============================
 function enterFullscreen() {
   const el = document.documentElement;
   const rfs = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
   if (rfs) {
-    rfs.call(el).then(() => {
-      document.getElementById('fullscreen-overlay').classList.add('hidden');
-    }).catch(() => {
-      // If fullscreen fails (e.g., mobile), just hide overlay
-      document.getElementById('fullscreen-overlay').classList.add('hidden');
-    });
-  } else {
-    document.getElementById('fullscreen-overlay').classList.add('hidden');
-  }
+    rfs.call(el).then(() => { document.getElementById('fullscreen-overlay').classList.add('hidden'); })
+      .catch(() => { document.getElementById('fullscreen-overlay').classList.add('hidden'); });
+  } else { document.getElementById('fullscreen-overlay').classList.add('hidden'); }
 }
-
 function checkFullscreen() {
-  // Listen for fullscreen exit
   document.addEventListener('fullscreenchange', onFsChange);
   document.addEventListener('webkitfullscreenchange', onFsChange);
 }
-
 function onFsChange() {
   const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   if (!isFs && !submitted) {
@@ -940,247 +672,136 @@ function onFsChange() {
   }
 }
 
-// ============================
-// TAB / VISIBILITY TRACKING
-// ============================
+// TAB / VISIBILITY
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && !submitted) {
     tabSwitchCount++;
     const bar = document.getElementById('tabswitch-bar');
-    bar.textContent = `⚠ Tab switch detected (${tabSwitchCount} total). This has been recorded.`;
+    bar.textContent = 'Tab switch detected (' + tabSwitchCount + ' total). This has been recorded.';
     bar.classList.add('show');
     setTimeout(() => bar.classList.remove('show'), 3000);
   }
 });
 
-// Detect window blur (catches alt-tab even without full visibility change)
-window.addEventListener('blur', () => {
-  if (!submitted && sessionStart) {
-    // Already counted by visibilitychange in most cases, but blur catches some edge cases
-  }
-});
-
-// ============================
-// SCREENSHOT DETECTION (best-effort)
-// ============================
+// SCREENSHOT DETECTION
 document.addEventListener('keyup', (e) => {
-  // Detect PrintScreen key
   if (e.key === 'PrintScreen') {
-    tabSwitchCount++; // count as an integrity event
+    tabSwitchCount++;
     const bar = document.getElementById('tabswitch-bar');
-    bar.textContent = `⚠ Screenshot attempt detected. This has been recorded.`;
+    bar.textContent = 'Screenshot attempt detected. This has been recorded.';
     bar.classList.add('show');
     setTimeout(() => bar.classList.remove('show'), 3000);
   }
 });
-
-// Detect Cmd+Shift+3/4 on Mac (best effort)
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === '3' || e.key === '4' || e.key === 's' || e.key === 'S')) {
-    // Possible screenshot shortcut
     const bar = document.getElementById('tabswitch-bar');
-    bar.textContent = `⚠ Possible screenshot shortcut detected. This has been recorded.`;
+    bar.textContent = 'Possible screenshot detected. This has been recorded.';
     bar.classList.add('show');
     setTimeout(() => bar.classList.remove('show'), 3000);
   }
 });
 
-// ============================
-// IDLE TRACKING + INTERACTION DENSITY
-// ============================
+// IDLE + INTERACTION DENSITY
 function startIdleTracking() {
-  const IDLE_THRESHOLD = 30000; // 30 seconds of no activity = idle
-
+  const IDLE_THRESHOLD = 30000;
   const resetIdle = () => { lastActivity = Date.now(); };
   document.addEventListener('mousemove', resetIdle);
-  document.addEventListener('keydown', (e) => {
-    resetIdle();
-    if (!submitted) interactionCounts.keystrokes++;
-  });
-  document.addEventListener('click', (e) => {
-    resetIdle();
-    if (!submitted) interactionCounts.clicks++;
-  });
+  document.addEventListener('keydown', (e) => { resetIdle(); if (!submitted) interactionCounts.keystrokes++; });
+  document.addEventListener('click', (e) => { resetIdle(); if (!submitted) interactionCounts.clicks++; });
   document.addEventListener('touchstart', resetIdle);
-
-  // Scroll tracking — on the content area specifically
   const contentArea = document.querySelector('.content-area');
   if (contentArea) {
-    contentArea.addEventListener('scroll', () => {
-      resetIdle();
-      if (!submitted) interactionCounts.scrolls++;
-    });
+    contentArea.addEventListener('scroll', () => { resetIdle(); if (!submitted) interactionCounts.scrolls++; });
   }
-  // Also catch wheel events even if content doesn't scroll
   document.addEventListener('wheel', resetIdle);
-
-  // Idle counter
-  setInterval(() => {
-    if (!submitted && Date.now() - lastActivity > IDLE_THRESHOLD) {
-      idleSeconds++;
-    }
-  }, 1000);
-
-  // Interaction density snapshot every 15 seconds
+  setInterval(() => { if (!submitted && Date.now() - lastActivity > IDLE_THRESHOLD) idleSeconds++; }, 1000);
   setInterval(() => {
     if (!submitted && sessionStart) {
       interactionLog.push({
         t: Math.round((Date.now() - new Date(sessionStart).getTime()) / 1000),
-        c: interactionCounts.clicks,
-        k: interactionCounts.keystrokes,
-        s: interactionCounts.scrolls,
-        tab: currentTab
+        c: interactionCounts.clicks, k: interactionCounts.keystrokes,
+        s: interactionCounts.scrolls, tab: currentTab
       });
-      // Reset counters for next window
       interactionCounts = { clicks: 0, keystrokes: 0, scrolls: 0 };
     }
   }, 15000);
-
-  // Start tab timer for first tab
   tabEnteredAt = Date.now();
 }
 
-// ============================
 // COPY PREVENTION
-// ============================
 document.addEventListener('copy', (e) => e.preventDefault());
 document.addEventListener('cut', (e) => e.preventDefault());
 document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-// ============================
 // TAB NAVIGATION
-// ============================
 function switchTab(idx) {
-  // Record time on previous tab
-  if (tabEnteredAt !== null && !submitted) {
-    tabTimeMs[currentTab] += (Date.now() - tabEnteredAt);
-  }
-
+  if (tabEnteredAt !== null && !submitted) tabTimeMs[currentTab] += (Date.now() - tabEnteredAt);
   currentTab = idx;
   tabEnteredAt = Date.now();
-
-  document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', i === idx);
-  });
-  document.querySelectorAll('.tab-panel').forEach((panel, i) => {
-    panel.classList.toggle('active', i === idx);
-  });
-  // Scroll content area to top
+  document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-panel').forEach((panel, i) => panel.classList.toggle('active', i === idx));
   document.querySelector('.content-area').scrollTop = 0;
 }
 
-// ============================
-// MCQ SELECTION
-// ============================
+// MCQ
 function selectAnswer(qIndex, answer) {
   if (submitted) return;
-
   answers[qIndex] = answer;
-  answerTimestamps[qIndex].push({
-    answer: answer,
-    time: new Date().toISOString()
-  });
-
-  // Update UI
-  const options = document.querySelectorAll(`[data-q="${qIndex}"] .mcq-opt`);
+  answerTimestamps[qIndex].push({ answer: answer, time: new Date().toISOString() });
+  const options = document.querySelectorAll('[data-q="' + qIndex + '"] .mcq-opt');
   options.forEach(opt => {
     const letter = opt.querySelector('.opt-letter').textContent.toLowerCase();
     opt.classList.toggle('selected', letter === answer);
   });
-
-  // Update tab check
-  document.getElementById(`check-${qIndex}`).classList.add('answered');
-
-  // Update progress
+  document.getElementById('check-' + qIndex).classList.add('answered');
   updateProgress();
 }
-
 function updateProgress() {
   const answered = answers.filter(a => a !== null).length;
-  document.getElementById('progressText').textContent = `${answered} of 5 answered`;
+  document.getElementById('progressText').textContent = answered + ' of 5 answered';
   document.getElementById('submitBtn').disabled = answered < 5;
 }
 
-// ============================
-// SUBMISSION
-// ============================
+// SUBMIT
 async function submitAll() {
   if (submitted) return;
   submitted = true;
-
-  // Capture final tab time
-  if (tabEnteredAt !== null) {
-    tabTimeMs[currentTab] += (Date.now() - tabEnteredAt);
-  }
-
+  if (tabEnteredAt !== null) tabTimeMs[currentTab] += (Date.now() - tabEnteredAt);
   const payload = {
     name: studentName,
     timestamp: new Date().toISOString(),
     sessionStart: sessionStart,
-    answers: {
-      q1: answers[0],
-      q2: answers[1],
-      q3: answers[2],
-      q4: answers[3],
-      q5: answers[4],
-    },
+    answers: { q1: answers[0], q2: answers[1], q3: answers[2], q4: answers[3], q5: answers[4] },
     answerHistory: answerTimestamps,
     integrity: {
-      tabSwitches: tabSwitchCount,
-      fullscreenExits: fullscreenExitCount,
+      tabSwitches: tabSwitchCount, fullscreenExits: fullscreenExitCount,
       idleSeconds30s: idleSeconds,
       totalTimeSeconds: Math.round((Date.now() - new Date(sessionStart).getTime()) / 1000),
     },
     tabTime: {
-      tab1_sec: Math.round(tabTimeMs[0] / 1000),
-      tab2_sec: Math.round(tabTimeMs[1] / 1000),
-      tab3_sec: Math.round(tabTimeMs[2] / 1000),
-      tab4_sec: Math.round(tabTimeMs[3] / 1000),
+      tab1_sec: Math.round(tabTimeMs[0] / 1000), tab2_sec: Math.round(tabTimeMs[1] / 1000),
+      tab3_sec: Math.round(tabTimeMs[2] / 1000), tab4_sec: Math.round(tabTimeMs[3] / 1000),
       tab5_sec: Math.round(tabTimeMs[4] / 1000),
     },
     interactionDensity: interactionLog,
   };
-
-  // Show submitted screen immediately
   document.getElementById('app').classList.remove('visible');
   document.getElementById('submitted-screen').classList.add('visible');
-
-  // Send to Google Sheets
   try {
-    if (WEBHOOK_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-      await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } else {
-      console.log('WEBHOOK NOT SET — payload:', JSON.stringify(payload, null, 2));
-    }
-  } catch (err) {
-    console.error('Submit error:', err);
-  }
-
-  // Exit fullscreen
-  if (document.fullscreenElement) {
-    document.exitFullscreen().catch(() => {});
-  }
+    await fetch(WEBHOOK_URL, { method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  } catch (err) { console.error('Submit error:', err); }
+  if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
 }
 
-// ============================
-// PREVENT DEVTOOLS (light deterrent)
-// ============================
+// DEVTOOLS DETERRENT
 document.addEventListener('keydown', (e) => {
-  // F12
   if (e.key === 'F12') e.preventDefault();
-  // Ctrl+Shift+I / Cmd+Opt+I
   if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) e.preventDefault();
-  // Ctrl+Shift+J
   if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j')) e.preventDefault();
-  // Ctrl+U (view source)
   if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) e.preventDefault();
 });
 </script>
-
 </body>
 </html>
